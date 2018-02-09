@@ -1,2 +1,3 @@
-# calculator-typescript-cucumber
-TypeScript &amp; Cucumber calculator sample
+# TypeScript & Cucumber
+
+This repository contains a simple calculator example.
