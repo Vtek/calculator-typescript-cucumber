@@ -10,30 +10,29 @@ declare module 'cucumber' {
     }
 }
 
-setWorldConstructor(({ attach, parameters }) => {
-    this.attach = attach;
-    this.parameters = parameters;
-    this.log = (message: string): void => console.log(`\n${message}`); //just an example in order to add capabilities in world
+class CalculatorWorld implements World {
+    calculator: Calculator;
+    actual: number;
+    log(message: string): void {
+        console.log(`\n${message}`); //just an example in order to add capabilities in world
+    }
+}
+
+setWorldConstructor(CalculatorWorld);
+
+Given('a calculator', function() {
+    this.log('Given a calculator');
+    this.calculator = new Calculator();
 });
 
-Given('a calculator', () => {
-    const world = this as World;
-    world.log('Given a calculator');
+When('I add {int} and {int}', function(number1: number, number2: number) {
+    this.log(`When I add ${number1} and ${number2}`);
 
-    world.calculator = new Calculator();
+    this.actual = this.calculator.Add(number1, number2);
 });
 
-When('I add {int} and {int}', (number1: number, number2: number) => {
-    const world = this as World;
-    world.log(`When I add ${number1} and ${number2}`);
+Then("the result is {int}", function(expected: number) {
+    this.log(`Then the result is ${expected}`);
 
-    world.actual = world.calculator.Add(<number>number1, <number>number2);
-});
-
-Then("the result is {int}", (expected: number) => {
-    const world = this as World;
-    world.log(`Then the result is ${expected}`);
-
-    expect(world.actual).be.equal(expected);
-    return;
+    expect(this.actual).be.equal(expected);
 });
